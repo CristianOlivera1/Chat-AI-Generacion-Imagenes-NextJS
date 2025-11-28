@@ -8,6 +8,9 @@ Sé conciso y amigable en tu respuesta inicial.`,
   INITIAL_IMAGE: `Saluda al usuario de manera amigable y pregúntale.
 ¿Qué imagen te gustaría crear hoy?`,
 
+  INITIAL_VIDEO: `Saluda al usuario de manera amigable y pregúntale.
+¿Qué video te gustaría crear hoy?`,
+
   CONTINUE_CHAT: (historyText: string, userMessage: string) => `Eres un asistente de inteligencia artificial útil y amigable.
 
 Historial de la conversación:
@@ -29,6 +32,17 @@ El usuario acaba de escribir este prompt para generar una imagen: "${userMessage
 Confirma que has entendido su solicitud y explica brevemente qué tipo de imagen vas a generar basándote en su descripción. Sé entusiasta y útil.
 
 IMPORTANTE: Al final, SIEMPRE incluye una línea separada que comience EXACTAMENTE con "IMAGEN:" seguida del prompt del usuario mejorado para la generación de imagen. Esta línea es OBLIGATORIA.`,
+
+  CONTINUE_VIDEO: (historyText: string, userMessage: string) => `Eres un asistente especializado en generar videos con IA.
+
+Historial de la conversación:
+${historyText}
+
+El usuario acaba de escribir este prompt para generar un video: "${userMessage}"
+
+Confirma que has entendido su solicitud y explica brevemente qué tipo de video vas a generar basándote en su descripción. Sé entusiasta y útil.
+
+IMPORTANTE: Al final, SIEMPRE incluye una línea separada que comience EXACTAMENTE con "VIDEO:" seguida del prompt del usuario mejorado para la generación de video. Esta línea es OBLIGATORIA.`,
 
   GENERATE_IMAGE: (description: string) => `Generate a high-quality, detailed image: ${description}. Use professional photography or digital art style with rich colors, sharp details, and excellent composition.`
 }
