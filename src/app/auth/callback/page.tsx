@@ -18,10 +18,8 @@ export default function AuthCallback() {
       }
 
       if (data.session) {
-        // Successfully authenticated, redirect to home
         router.push('/')
       } else {
-        // No session, redirect to login
         router.push('/login')
       }
     }
