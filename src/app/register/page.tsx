@@ -56,9 +56,9 @@ export default function RegisterPage() {
         email,
         password,
       })
-      
+
       if (error) throw error
-      
+
       // If user was created successfully, insert additional profile data
       if (data.user) {
         const { error: profileError } = await supabase
@@ -69,7 +69,7 @@ export default function RegisterPage() {
             last_name: lastName,
             avatar_url: '', // Default empty avatar
           })
-        
+
         if (profileError) {
           // Check if it's a duplicate email error
           if (profileError.code === '23505') {
@@ -84,7 +84,7 @@ export default function RegisterPage() {
           showSuccess('¡Registro exitoso!', 'Por favor verifica tu correo electrónico antes de iniciar sesión.')
         }
       }
-      
+
       setTimeout(() => router.push('/login'), 2000)
     } catch (error: any) {
       console.error('Error during email sign up:', error)
@@ -98,20 +98,24 @@ export default function RegisterPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-black">
       <div className="w-full max-w-sm space-y-8 px-4">
-        <div className="space-y-2 text-center">
+        <div className="flex text-center justify-center flex-col items-center">
+          <img
+            src="/logo-chat-ia.avif"
+            alt="Logo Chat AI"
+            className="size-32"
+            width={128}
+            height={128}
+          />
           <h1 className="text-2xl font-semibold tracking-tight text-white">
             Registrarse
           </h1>
-          <p className="text-sm text-gray-400">
-            Crea tu cuenta nueva
-          </p>
         </div>
 
         <div className="space-y-4">
           <Button
             onClick={handleGoogleSignUp}
             disabled={loading}
-            className="relative w-full h-10 bg-white text-white hover:bg-gray-50 font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+            className="relative w-full h-10 bg-white text-black hover:bg-gray-50 font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
             variant="outline"
           >
             {loading ? (
@@ -120,7 +124,7 @@ export default function RegisterPage() {
                 <span>Cargando...</span>
               </div>
             ) : (
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 text-white">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="16"

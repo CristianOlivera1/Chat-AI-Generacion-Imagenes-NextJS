@@ -66,20 +66,24 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-black">
       <div className="w-full max-w-sm space-y-8 px-4">
-        <div className="space-y-2 text-center">
+        <div className="flex text-center justify-center flex-col items-center">
+          <img 
+            src="/logo-chat-ia.avif" 
+            alt="Logo Chat AI" 
+            className="size-32"
+            width={128}
+            height={128}
+          />
           <h1 className="text-2xl font-semibold tracking-tight text-white">
             Iniciar sesión
           </h1>
-          <p className="text-sm text-gray-400">
-            Ingresa a tu cuenta
-          </p>
         </div>
 
         <div className="space-y-4">
           <Button
             onClick={handleGoogleSignIn}
             disabled={loading}
-            className="relative w-full h-10 bg-white text-white dark:hover:bg-gray-900 font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+            className="relative w-full h-10 bg-white text-black dark:hover:bg-gray-900 font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
             variant="outline"
           >
             {loading ? (
@@ -88,7 +92,7 @@ export default function LoginPage() {
                 <span>Cargando...</span>
               </div>
             ) : (
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 text-white">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="16"
