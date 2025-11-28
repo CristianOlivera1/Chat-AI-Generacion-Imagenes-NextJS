@@ -22,17 +22,23 @@ export default function Navbar() {
 
     if (loading) {
         return (
-            <nav className="dark:bg-transparent shadow-sm border-b">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="flex justify-between h-16">
+            <nav className="bg-[radial-gradient(circle_500px_at_50%_200px,#3e3e3e,transparent)] shadow-sm border-b border-gray-800">
+                <div className="max-w-7xl mx-auto px-4 py-2 sm:px-6 lg:px-8">
+                    <div className="flex justify-between">
                         <div className="flex items-center">
-                            <img src="/logo-chat-ia.avif" alt="Logo Chat AI" className='size-8' />
-                            <Link href="/" className="text-xl font-bold text-gray-900">
+                            <img 
+                                src="/logo-chat-ia.avif" 
+                                alt="Logo Chat AI" 
+                                className="size-8"
+                                width={32}
+                                height={32}
+                            />
+                            <Link href="/" className="text-xl font-bold text-gray-white">
                                 Chat AI
                             </Link>
                         </div>
                         <div className="flex items-center space-x-4">
-                            <div className="animate-pulse h-8 w-20 bg-gray-200 rounded"></div>
+                            <div className="animate-pulse h-8 w-20 bg-gray-700 rounded"></div>
                         </div>
                     </div>
                 </div>
@@ -41,11 +47,18 @@ export default function Navbar() {
     }
 
     return (
-        <nav className="dark:bg-white/5 shadow-sm border-b border-gray-800">
+   <nav className="bg-[radial-gradient(circle_500px_at_50%_200px,#3e3e3e,transparent)] shadow-sm border-b border-gray-800">
+
             <div className="max-w-7xl mx-auto px-4 py-2 sm:px-6 lg:px-8">
                 <div className="flex justify-between">
                     <div className="flex items-center">
-                        <img src="/logo-chat-ia.avif" alt="Logo Chat AI" className='size-8' />
+                        <img 
+                            src="/logo-chat-ia.avif" 
+                            alt="Logo Chat AI" 
+                            className="size-8"
+                            width={32}
+                            height={32}
+                        />
                         <Link href="/" className="text-xl font-bold text-gray-white">
                             Chat AI
                         </Link>
