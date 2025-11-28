@@ -5,6 +5,7 @@ import { GameInput } from "./componentes/game-input";
 import { GameLoader } from "./componentes/game-loader";
 import { GameMessage } from "./componentes/game-message";
 import { ImageModePlaceholder } from "./componentes/image-mode-placeholder";
+import { VideoModePlaceholder } from "./componentes/video-mode-placeholder";
 import { useZombieGame } from "./hooks/use-zombie-game";
 import { useColorExtractor } from "@/app/hooks/color-extractor";
 import { useState, useEffect, useRef } from "react";
@@ -46,6 +47,9 @@ export default function Home() {
           <ConversationContent className="max-w-xl mx-auto">
             {gameMode === 'imagen' && messages.length === 0 && !isLoading && (
               <ImageModePlaceholder />
+            )}
+            {gameMode === 'video' && messages.length === 0 && !isLoading && (
+              <VideoModePlaceholder />
             )}
             {
               messages.map(message => (

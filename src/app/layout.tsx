@@ -3,7 +3,6 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { AuthProvider } from "@/contexts/AuthContext";
 import Navbar from "@/components/navbar";
 import "./globals.css";
-import Head from 'next/head';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -18,6 +17,16 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Chat AI & Generador de Imágenes",
   description: "Chat con IA y generador de imágenes",
+  icons: {
+    icon: "/logo-chat-ia.avif",
+    shortcut: "/logo-chat-ia.avif",
+    apple: "/logo-chat-ia.avif",
+  },
+};
+
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
 };
 
 export default function RootLayout({
@@ -26,13 +35,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es">
-         <Head>
-        <link rel="icon" href="/logo-chat-ia.avif" />
-      </Head>
-
+    <html lang="es" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} dark antialiased`}
+        suppressHydrationWarning
       >
         <AuthProvider>
           <Navbar />
