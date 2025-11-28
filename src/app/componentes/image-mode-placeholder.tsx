@@ -5,14 +5,12 @@ export function ImageModePlaceholder() {
             <MessageContent>
                 <div className="max-w-2xl mx-auto text-center">
                     <div className="mt-2 mb-4">
-                        <h2 className="text-3xl font-semibold text-white mb-2">Imagina. Describe. Crea.</h2>
-                        <p className="text-gray-400 text-lg">
-                            Con <span className="font-medium text-yellow-400">Nanobana</span>, transforma tus ideas en imágenes únicas. Solo escribe lo que quieres ver.
-                        </p>
+                        <h2 className="text-5xl font-black mb-2 bg-linear-to-r from-black/0 via-white to-black/0 bg-clip-text text-transparent">
+                            Generador de Imágenes con IA
+                        </h2>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        {/* Columna izquierda con 2 imágenes */}
                         <div className="grid gap-4">
                             <img
                                 src="/image1.avif"
@@ -26,7 +24,6 @@ export function ImageModePlaceholder() {
                             />
                         </div>
 
-                        {/* Imagen derecha grande */}
                         <div className="md:col-span-2">
                             <img
                                 src="/image3.avif"
