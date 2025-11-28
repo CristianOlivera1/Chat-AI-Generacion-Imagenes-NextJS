@@ -6,7 +6,6 @@ export async function POST(request: NextRequest) {
   try {
     const { imagePrompt } = await request.json();
 
-    // Construir el cuerpo de la solicitud para Freepik Gemini API
     const body = {
       prompt: imagePrompt,
       resolution: '2k',
@@ -14,7 +13,6 @@ export async function POST(request: NextRequest) {
       model: 'realism',
       engine: 'automatic',
       filter_nsfw: true
-      // Puedes agregar más parámetros según la documentación si lo necesitas
     };
 
     const response = await fetch('https://api.freepik.com/v1/ai/gemini-2-5-flash-image-preview', {
@@ -32,8 +30,6 @@ export async function POST(request: NextRequest) {
     }
 
     const result = await response.json();
-    // La respuesta inicial solo contiene el task_id y status
-    // El frontend debe consultar el estado y la imagen generada usando el task_id
 
     return NextResponse.json({ task_id: result.data.task_id, status: result.data.status });
   } catch (error) {

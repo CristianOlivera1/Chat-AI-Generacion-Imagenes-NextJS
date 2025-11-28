@@ -14,7 +14,9 @@ export async function POST(request: NextRequest) {
     let prompt: string;
 
     if (isStart) {
-      prompt = mode === 'chat' ? GAME_PROMPTS.INITIAL_CHAT : GAME_PROMPTS.INITIAL_IMAGE;
+      prompt = mode === 'chat' ? GAME_PROMPTS.INITIAL_CHAT : 
+               mode === 'imagen' ? GAME_PROMPTS.INITIAL_IMAGE : 
+               GAME_PROMPTS.INITIAL_VIDEO;
     } else {
       const historyText = conversationHistory.map(
         (message) => `${message.role}: ${message.content}`
@@ -22,7 +24,9 @@ export async function POST(request: NextRequest) {
 
       prompt = mode === 'chat' 
         ? GAME_PROMPTS.CONTINUE_CHAT(historyText, userMessage)
-        : GAME_PROMPTS.CONTINUE_IMAGE(historyText, userMessage);
+        : mode === 'imagen'
+        ? GAME_PROMPTS.CONTINUE_IMAGE(historyText, userMessage)
+        : GAME_PROMPTS.CONTINUE_VIDEO(historyText, userMessage);
     }
 
     const { text } = await generateText({
@@ -32,16 +36,22 @@ export async function POST(request: NextRequest) {
 
     let narrative: string;
     let imagePrompt: string = '';
+    let videoPrompt: string = '';
 
     if (mode === 'imagen') {
       const parts = text.split(GAME_CONFIG.IMAGE.SEPARATOR);
       narrative = parts[0];
       imagePrompt = parts[1] || '';
+    } else if (mode === 'video') {
+      const parts = text.split(GAME_CONFIG.VIDEO.SEPARATOR);
+      narrative = parts[0];
+      videoPrompt = parts[1] || '';
+      imagePrompt = videoPrompt; 
     } else {
       narrative = text;
     }
 
-    return NextResponse.json({ narrative, imagePrompt });
+    return NextResponse.json({ narrative, imagePrompt, videoPrompt });
     
   } catch (error) {
     console.error('Error generating story:', error);
