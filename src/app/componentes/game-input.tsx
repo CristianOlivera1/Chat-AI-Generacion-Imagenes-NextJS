@@ -28,7 +28,9 @@ export function GameInput({ input, gameMode, onInputChange, onSubmit, onModeChan
   
   const placeholder = gameMode === 'chat' 
     ? UI_MESSAGES.PLACEHOLDERS.CHAT_INPUT 
-    : UI_MESSAGES.PLACEHOLDERS.IMAGE_INPUT
+    : gameMode === 'imagen'
+    ? UI_MESSAGES.PLACEHOLDERS.IMAGE_INPUT
+    : UI_MESSAGES.PLACEHOLDERS.VIDEO_INPUT
 
   return (
     <div className="space-y-3">
@@ -37,12 +39,13 @@ export function GameInput({ input, gameMode, onInputChange, onSubmit, onModeChan
           Modo:
         </label>
         <Select value={gameMode} onValueChange={onModeChange} disabled={isLoading}>
-          <SelectTrigger className="w-32 bg-white/10 border-white/20 text-white">
+          <SelectTrigger className="w-36 bg-white/10 border-white/20 text-white">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="chat">{UI_MESSAGES.MODES.CHAT}</SelectItem>
             <SelectItem value="imagen">{UI_MESSAGES.MODES.IMAGEN}</SelectItem>
+            <SelectItem value="video">{UI_MESSAGES.MODES.VIDEO}</SelectItem>
           </SelectContent>
         </Select>
       </div>
