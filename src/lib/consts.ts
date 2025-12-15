@@ -19,7 +19,7 @@ export const UI_MESSAGES = {
   MODES: {
     CHAT: 'Chat',
     IMAGEN: 'Imagen',
-    VIDEO: 'Video'
+    VIDEO: 'Imagen a video'
   }
 }
 

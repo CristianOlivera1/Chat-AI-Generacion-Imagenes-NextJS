@@ -6,6 +6,7 @@ export interface GameMessage {
   imageLoading?: boolean;
   video?: GeneratedVideo;
   videoLoading?: boolean;
+  uploadedImageUrl?: string;
 }
 
 export interface GeneratedImage {

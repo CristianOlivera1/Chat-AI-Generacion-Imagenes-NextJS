@@ -1,19 +1,20 @@
-import { useState, useEffect, use } from 'react';
-import type { GameMessage, ConversationMessage, GenerateStoryResponse, GameMode } from '@/lib/types';
+import { useState, useEffect } from 'react';
+import type { GameMessage, GenerateStoryResponse, GameMode } from '@/lib/types';
 
 export function useZombieGame() {
   const [messages, setMessages] = useState<GameMessage[]>([])
   const [input, setInput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [gameMode, setGameMode] = useState<GameMode>('chat')
+  const [uploadedImage, setUploadedImage] = useState<string | null>(null)
   
   useEffect(() => {
     if (gameMode === 'chat') {
       startGame()
     } else {
-      // Para modo imagen y video, limpiar mensajes y no generar mensaje inicial
       setMessages([])
     }
+    setUploadedImage(null)
   }, [gameMode])
 
   const startGame = async () => {
@@ -45,9 +46,6 @@ export function useZombieGame() {
       
       if (gameMode === 'imagen' && data.imagePrompt) {
         generateImage(messageId, data.imagePrompt)
-      } else if (gameMode === 'video' && data.videoPrompt) {
-        // Para video, primero generamos una imagen y luego el video
-        generateImageForVideo(messageId, data.videoPrompt)
       }
     } catch (error) {
       console.error('Error generating story:', error)
@@ -75,12 +73,11 @@ export function useZombieGame() {
         throw new Error('No task_id returned')
       }
 
-      // Poll gemini API hasta que la imagen esté lista
       let pollCount = 0;
       let generatedImageUrl: string | null = null;
       
       while (pollCount < 20 && !generatedImageUrl) {
-        await new Promise(resolve => setTimeout(resolve, 3000)); // Espera 3 segundos
+        await new Promise(resolve => setTimeout(resolve, 3000)); 
         
         try {
           const statusResponse = await fetch(`/api/gemini-status?task_id=${imageData.task_id}`);
@@ -125,73 +122,35 @@ export function useZombieGame() {
     }
   }
 
-  const generateImageForVideo = async (messageId: string, videoPrompt: string) => {
+  const handleImageUpload = async (file: File) => {
     try {
-      // Primero generamos una imagen basada en el prompt del video
-      const response = await fetch('/api/generate-image', {
-        method: 'POST',
-        body: JSON.stringify({
-          imagePrompt: videoPrompt
+      const { supabase } = await import('@/utils/supabase/client')
+
+      const fileExt = file.name.split('.').pop()
+      const fileName = `${crypto.randomUUID()}.${fileExt}`
+      const filePath = `video-images/${fileName}`
+
+      const { data, error } = await supabase.storage
+        .from('game-images')
+        .upload(filePath, file, {
+          cacheControl: '3600',
+          upsert: false
         })
-      })
-  
-      if (!response.ok) {
-        throw new Error('Failed to generate image for video')
-      }
-  
-      const imageData = await response.json()
-      
-      if (!imageData.task_id) {
-        throw new Error('No task_id returned for image')
+
+      if (error) {
+        console.error('Error uploading to Supabase:', error)
+        alert('Error al subir la imagen. Por favor intenta de nuevo.')
+        return
       }
 
-      // Poll gemini API hasta que la imagen esté lista
-      let pollCount = 0;
-      let generatedImageUrl: string | null = null;
-      
-      while (pollCount < 20 && !generatedImageUrl) {
-        await new Promise(resolve => setTimeout(resolve, 3000)); // Espera 3 segundos
-        
-        try {
-          const statusResponse = await fetch(`/api/gemini-status?task_id=${imageData.task_id}`);
-          if (!statusResponse.ok) break;
-          
-          const statusData = await statusResponse.json();
-          
-          if (statusData.status === 'COMPLETED' && statusData.generated && statusData.generated.length > 0) {
-            generatedImageUrl = statusData.generated[0];
-            break;
-          } else if (statusData.status === 'FAILED') {
-            break;
-          }
-        } catch (pollError) {
-          console.error('Error polling image status:', pollError);
-          break;
-        }
-        
-        pollCount++;
-      }
+      const { data: { publicUrl } } = supabase.storage
+        .from('game-images')
+        .getPublicUrl(filePath)
 
-      if (generatedImageUrl) {
-        // Ahora generamos el video usando la imagen
-        generateVideo(messageId, videoPrompt, generatedImageUrl);
-      } else {
-        // Si no se pudo generar la imagen, marcamos como falló
-        setMessages(prevMessages => prevMessages.map(message => {
-          if (message.id === messageId) {
-            return { ...message, videoLoading: false }
-          }
-          return message
-        }))
-      }
+      setUploadedImage(publicUrl)
     } catch (error) {
-      console.error('Error generating image for video:', error);
-      setMessages(prevMessages => prevMessages.map(message => {
-        if (message.id === messageId) {
-          return { ...message, videoLoading: false }
-        }
-        return message
-      }))
+      console.error('Error uploading image:', error)
+      alert('Error al subir la imagen. Por favor intenta de nuevo.')
     }
   }
 
@@ -215,7 +174,6 @@ export function useZombieGame() {
         throw new Error('No task_id returned')
       }
 
-      // Poll PixVerse API hasta que el video esté listo
       let pollCount = 0;
       let generatedVideoUrl: string | null = null;
       
@@ -223,7 +181,7 @@ export function useZombieGame() {
         await new Promise(resolve => setTimeout(resolve, 5000)); // Espera 5 segundos (videos toman más tiempo)
         
         try {
-          const statusResponse = await fetch(`/api/pixverse-status?task_id=${videoData.task_id}`);
+          const statusResponse = await fetch(`/api/kling-status?task_id=${videoData.task_id}`);
           if (!statusResponse.ok) break;
           
           const statusData = await statusResponse.json();
@@ -269,10 +227,16 @@ export function useZombieGame() {
     e.preventDefault()
     if (!input.trim() || isLoading) return
 
+    if (gameMode === 'video' && !uploadedImage) {
+      alert('Por favor sube una imagen primero para generar el video')
+      return
+    }
+
     const userMessage: GameMessage = {
       id: crypto.randomUUID(),
       role: 'user',
-      content: input
+      content: input,
+      uploadedImageUrl: gameMode === 'video' ? (uploadedImage ?? undefined) : undefined
     }
 
     setIsLoading(true)
@@ -310,9 +274,8 @@ export function useZombieGame() {
       
       if (gameMode === 'imagen' && data.imagePrompt) {
         generateImage(messageId, data.imagePrompt)
-      } else if (gameMode === 'video' && data.videoPrompt) {
-        // Para video, primero generamos una imagen y luego el video
-        generateImageForVideo(messageId, data.videoPrompt)
+      } else if (gameMode === 'video' && uploadedImage) {
+        generateVideo(messageId, input, uploadedImage)
       }
     } catch (error) {
       console.error('Error generating story:', error)
@@ -327,9 +290,20 @@ export function useZombieGame() {
 
   const handleModeChange = (newMode: GameMode) => {
     setGameMode(newMode)
-    setMessages([])  // Reiniciar mensajes al cambiar modo
-    setInput('')    // Limpiar input
+    setMessages([]) 
+    setInput('')   
   }
 
-  return { messages, input, isLoading, gameMode, startGame, handleSubmit, handleInputChange, handleModeChange }
+  return { 
+    messages, 
+    input, 
+    isLoading, 
+    gameMode, 
+    uploadedImage,
+    startGame, 
+    handleSubmit, 
+    handleInputChange, 
+    handleModeChange,
+    handleImageUpload
+  }
 }
