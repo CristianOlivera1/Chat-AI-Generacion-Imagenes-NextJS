@@ -11,7 +11,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'task_id is required' }, { status: 400 });
     }
 
-    const response = await fetch(`https://api.freepik.com/v1/ai/image-to-video/pixverse-v5/${taskId}`, {
+    const response = await fetch(`https://api.freepik.com/v1/ai/image-to-video/kling-v2-5-pro/${taskId}`, {
       method: 'GET',
       headers: new Headers({
         'x-freepik-api-key': FREEPIK_API_KEY ?? '',
@@ -20,7 +20,7 @@ export async function GET(request: NextRequest) {
 
     if (!response.ok) {
       const errorText = await response.text();
-      throw new Error(`Freepik PixVerse V5 status API error: ${errorText}`);
+      throw new Error(`Freepik kling 2.5 status API error: ${errorText}`);
     }
 
     const result = await response.json();
@@ -31,7 +31,7 @@ export async function GET(request: NextRequest) {
       generated: result.data.generated || []
     });
   } catch (error) {
-    console.error('Error getting PixVerse V5 status:', error);
+    console.error('Error getting kling 2.5 status:', error);
     return NextResponse.json({ error: 'Error getting video status' }, { status: 500 });
   }
 }
