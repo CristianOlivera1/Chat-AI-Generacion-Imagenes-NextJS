@@ -12,7 +12,7 @@ import { useState, useEffect, useRef } from "react";
 import { type GameMessage as GameMessageType } from "@/lib/types";
 
 export default function Home() {
-  const { messages, input, isLoading, gameMode, startGame, handleSubmit, handleInputChange, handleModeChange } = useZombieGame();
+  const { messages, input, isLoading, gameMode, uploadedImage, startGame, handleSubmit, handleInputChange, handleModeChange, handleImageUpload } = useZombieGame();
   const [image, setImage] = useState<string | undefined>('');
   const lastMessageRef = useRef<GameMessageType | null>(null);
   useColorExtractor(image);
@@ -68,6 +68,8 @@ export default function Home() {
             onInputChange={handleInputChange}
             onSubmit={handleSubmit}
             onModeChange={handleModeChange}
+            onImageUpload={handleImageUpload}
+            uploadedImage={uploadedImage}
             isLoading={isLoading}
           />
         </div>
