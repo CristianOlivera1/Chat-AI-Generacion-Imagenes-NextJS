@@ -6,11 +6,23 @@ import { UI_MESSAGES } from "@/lib/consts";
 import { Loader } from "@/components/loader";
 
 export function GameMessage({ message, gameMode }: { message: GameMessageType, gameMode: GameMode }) {
-  const { role, content, image, imageLoading, video, videoLoading } = message;
+  const { role, content, image, imageLoading, video, videoLoading, uploadedImageUrl } = message;
 
   return (
     <Message from={role}>
       <MessageContent>
+        {
+          role === 'user' && gameMode === 'video' && uploadedImageUrl && (
+            <div className="w-full max-w-md mb-3">
+              <img
+                src={uploadedImageUrl}
+                alt="Imagen subida"
+                className="w-full rounded-md border border-white/20"
+              />
+            </div>
+          )
+        }
+        
         {
           role === 'assistant' && gameMode === 'imagen' && (
             <picture className="w-full max-w-2xl aspect-video overflow-hidden rounded-md">
