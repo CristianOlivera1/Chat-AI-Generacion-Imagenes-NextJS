@@ -8,19 +8,16 @@ export async function POST(request: NextRequest) {
 
     if (!imageUrl) {
       return NextResponse.json({ 
-        error: 'image_url is required for video generation' 
+        error: 'image_url es requerido para la generacion de video' 
       }, { status: 400 });
     }
 
     const body = {
       prompt: videoPrompt,
       image: imageUrl,
-      //resolution: '1080p',
       duration: "5",
       negative_prompt: '',
-     // style: 'anime', 
-      //seed: Math.floor(Math.random() * 1000000)
-       cfg_scale: 0.5
+      cfg_scale: 0.5
     };
 
     const response = await fetch('https://api.freepik.com/v1/ai/image-to-video/kling-v2-5-pro', {
@@ -44,7 +41,7 @@ export async function POST(request: NextRequest) {
       status: result.data.status 
     });
   } catch (error) {
-    console.error('Error generating video:', error);
-    return NextResponse.json({ error: 'Error generating video' }, { status: 500 });
+    console.error('Error generando video:', error);
+    return NextResponse.json({ error: 'Error generando video' }, { status: 500 });
   }
 }
