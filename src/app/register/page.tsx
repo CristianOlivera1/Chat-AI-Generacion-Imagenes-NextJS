@@ -8,6 +8,7 @@ import { AlertManager } from '@/components/ui/alert'
 import { useAlert, parseSupabaseError } from '@/hooks/useAlert'
 import Link from 'next/link'
 import { supabase } from '@/utils/supabase/client'
+import { isValidEmail, isValidName, isStrongPassword, sanitizeInput } from '@/utils/security'
 
 export default function RegisterPage() {
   const [loading, setLoading] = useState(false)
@@ -39,16 +40,33 @@ export default function RegisterPage() {
   }
 
   const handleEmailSignUp = async () => {
-    // Validation
     if (!firstName.trim() || !lastName.trim() || !email.trim() || !password.trim()) {
       showError('Campos requeridos', 'Por favor completa todos los campos.')
       return
     }
 
-    if (password.length < 6) {
-      showError('Contraseña muy corta', 'La contraseña debe tener al menos 6 caracteres.')
+    // Validar formato de email
+    if (!isValidEmail(email)) {
+      showError('Email inválido', 'Por favor ingresa un email válido.')
       return
     }
+
+    // Validar nombres
+    if (!isValidName(firstName) || !isValidName(lastName)) {
+      showError('Nombre inválido', 'Los nombres solo pueden contener letras.')
+      return
+    }
+
+    // Validar fortaleza de contraseña
+    const passwordValidation = isStrongPassword(password)
+    if (!passwordValidation.isValid) {
+      showError('Contraseña débil', passwordValidation.errors.join(', '))
+      return
+    }
+
+    // Sanitizar inputs
+    const sanitizedFirstName = sanitizeInput(firstName)
+    const sanitizedLastName = sanitizeInput(lastName)
 
     try {
       setLoading(true)
@@ -59,19 +77,18 @@ export default function RegisterPage() {
 
       if (error) throw error
 
-      // If user was created successfully, insert additional profile data
       if (data.user) {
         const { error: profileError } = await supabase
           .from('users')
           .insert({
+            id: data.user.id, // Usar el mismo ID de autenticación
             email: data.user.email,
-            first_name: firstName,
-            last_name: lastName,
-            avatar_url: '', // Default empty avatar
+            first_name: sanitizedFirstName,
+            last_name: sanitizedLastName,
+            avatar_url: '',
           })
 
         if (profileError) {
-          // Check if it's a duplicate email error
           if (profileError.code === '23505') {
             showWarning('Usuario existente', 'Este email ya está registrado. Redirigiendo al login...')
             setTimeout(() => router.push('/login'), 2000)

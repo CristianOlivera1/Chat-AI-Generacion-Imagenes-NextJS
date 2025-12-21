@@ -8,11 +8,13 @@ import { AlertManager } from '@/components/ui/alert'
 import { useAlert, parseSupabaseError } from '@/hooks/useAlert'
 import Link from 'next/link'
 import { supabase } from '@/utils/supabase/client'
+import { isValidEmail, RateLimiter } from '@/utils/security'
 
 export default function LoginPage() {
   const [loading, setLoading] = useState(false)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [rateLimiter] = useState(() => new RateLimiter('login', 5, 5 * 60 * 1000))
   const { signInWithGoogle, user } = useAuth()
   const { alerts, showSuccess, showError, removeAlert } = useAlert()
   const router = useRouter()
@@ -37,9 +39,23 @@ export default function LoginPage() {
   }
 
   const handleEmailSignIn = async () => {
-    // Validation
+    // Verificar rate limiting
+    const rateCheck = rateLimiter.check()
+    if (!rateCheck.allowed) {
+      const resetTime = rateCheck.resetTime ? new Date(rateCheck.resetTime) : new Date()
+      const minutesLeft = Math.ceil((resetTime.getTime() - Date.now()) / 60000)
+      showError('Demasiados intentos', `Por favor espera ${minutesLeft} minuto(s) antes de intentar nuevamente.`)
+      return
+    }
+
     if (!email.trim() || !password.trim()) {
       showError('Campos requeridos', 'Por favor ingresa tu email y contraseña.')
+      return
+    }
+
+    // Validar formato de email usando la utilidad
+    if (!isValidEmail(email)) {
+      showError('Email inválido', 'Por favor ingresa un email válido.')
       return
     }
 
@@ -52,12 +68,23 @@ export default function LoginPage() {
       
       if (error) throw error
       
+      // Reset rate limiter en caso de éxito
+      rateLimiter.reset()
       showSuccess('¡Bienvenido!', 'Has iniciado sesión exitosamente.')
       setTimeout(() => router.push('/'), 1000)
     } catch (error: any) {
       console.error('Error during email sign in:', error)
-      const { title, message } = parseSupabaseError(error)
-      showError(title, message)
+      
+      // Incrementar contador de intentos
+      rateLimiter.increment()
+      const newCheck = rateLimiter.check()
+      
+      if (!newCheck.allowed) {
+        showError('Cuenta bloqueada temporalmente', 'Demasiados intentos fallidos. Espera 5 minutos.')
+      } else {
+        const { title, message } = parseSupabaseError(error)
+        showError(title, `${message} (${newCheck.remainingAttempts} intentos restantes)`)
+      }
     } finally {
       setLoading(false)
     }
@@ -82,7 +109,7 @@ export default function LoginPage() {
         <div className="space-y-4">
           <Button
             onClick={handleGoogleSignIn}
-            disabled={loading}
+            disabled={loading || !rateLimiter.check().allowed}
             className="relative w-full h-10 bg-white text-black dark:hover:bg-gray-900 font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
             variant="outline"
           >
@@ -161,9 +188,10 @@ export default function LoginPage() {
 
           <Button
             onClick={handleEmailSignIn}
+            disabled={loading || !rateLimiter.check().allowed}
             className="w-full h-10 bg-white text-black hover:bg-gray-100 font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
           >
-            Iniciar sesión
+            {!rateLimiter.check().allowed ? 'Bloqueado temporalmente' : 'Iniciar sesión'}
           </Button>
         </div>
 
