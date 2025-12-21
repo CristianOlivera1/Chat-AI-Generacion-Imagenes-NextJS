@@ -52,8 +52,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
             .single()
 
           if (!existingUser) {
-            // Create new user profile
+            // Create new user profile with the same ID as auth
             await supabase.from('users').insert({
+              id: session.user.id, // Usar el mismo ID de autenticación
               email: session.user.email,
               first_name: session.user.user_metadata.full_name?.split(' ')[0] || '',
               last_name: session.user.user_metadata.full_name?.split(' ').slice(1).join(' ') || '',

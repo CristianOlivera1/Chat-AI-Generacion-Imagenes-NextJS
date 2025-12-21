@@ -30,7 +30,7 @@ export default function AuthCallback() {
   return (
     <div className="min-h-screen flex items-center justify-center dark:bg-black">
       <div className="text-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-b-gray-600 mx-auto"></div>
+        <img src="/logo-chat-ia.avif" alt="Logo Chat IA" className='animate-pulse' />
         <p className="mt-4 text-white">Completando autenticación...</p>
       </div>
     </div>
