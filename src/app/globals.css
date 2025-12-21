@@ -135,3 +135,34 @@
 p + p {
   margin-top: 16px;
 }
+
+button {
+  cursor: pointer;
+}
+
+/* WebKit (Chrome, Edge, Safari) */
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+*::-webkit-scrollbar-track {
+  background: #121212;                  
+  border-radius: 8px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #3a3a3a, #575757);
+  border-radius: 8px;
+  border: 2px solid #121212;           
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #4a4a4a, #6a6a6a);
+}
+
+.light *::-webkit-scrollbar-track { background: #f1f1f1; }
+.light *::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #bdbdbd, #9e9e9e);
+  border: 2px solid #f1f1f1;
+}
