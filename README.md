@@ -1,5 +1,9 @@
 # Chat AI y generación de imágenes
 
+<div>
+<img alt="banner-chateai" src="https://raw.githubusercontent.com/CristianOlivera1/Resources-dev/refs/heads/main/any/preview-chateai.jpg" />
+</div>
+
 [![Next.js](https://img.shields.io/badge/Next.js-15.5.2-black?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org/)
 [![React](https://img.shields.io/badge/React-19.1.0-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://reactjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
