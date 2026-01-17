@@ -1,7 +1,12 @@
 # Chat AI y generación de imágenes
 
-<div>
-<img alt="banner-chateai" src="https://raw.githubusercontent.com/CristianOlivera1/Resources-dev/refs/heads/main/any/preview-chateai.jpg" />
+<div align="center">
+  <video src="https://github.com/user-attachments/assets/ff6de242-211f-4cd2-b3fe-390a602f04d8" 
+    muted 
+    autoplay 
+    loop 
+    playsinline>
+  </video>
 </div>
 
 [![Next.js](https://img.shields.io/badge/Next.js-15.5.2-black?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org/)
@@ -66,6 +71,10 @@ pnpm dev
 5. **Abre tu navegador**
 
 Visita [http://localhost:3000](http://localhost:3000).
+
+<div>
+<img alt="banner-chateai" src="https://raw.githubusercontent.com/CristianOlivera1/Resources-dev/refs/heads/main/any/preview-chateai.jpg" />
+</div>
 
 ## 🌟 Características Técnicas
 
