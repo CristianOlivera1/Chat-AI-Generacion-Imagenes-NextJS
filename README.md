@@ -1,4 +1,4 @@
-# Chat AI y generación de imágenes
+# Chat AI, generación de imágenes y videos
 
 <div align="center">
   <video src="https://github.com/user-attachments/assets/ff6de242-211f-4cd2-b3fe-390a602f04d8" 
@@ -18,9 +18,7 @@
 
 ## 🎮 Características
 
-- **Narrativa Generada por IA**: Cada historia es única gracias a Google Gemini
-- **Imágenes Dinámicas**: Visuales en estilo pixel art generadas automáticamente
-- **Aventura Conversacional**: Interactúa usando lenguaje natural
+- **Imágenes Dinámicas**: Visuales generadas automáticamente
 - **Interfaz Moderna**: UI responsive y elegante con TailwindCSS
 - **Autenticación**: Con google utilizando sepabase
 - **Almacenamiento**: En la nube en supabase base de datos PostgreSQL
@@ -30,9 +28,8 @@
 - **Framework**: [Next.js 15](https://nextjs.org/) con Turbopack
 - **Frontend**: [React 19](https://reactjs.org/) con TypeScript
 - **Estilos**: [TailwindCSS 4](https://tailwindcss.com/)
-- **IA**: [Google Gemini](https://ai.google.dev/) para narrativa e imágenes
+- **IA**: [Google Gemini](https://ai.google.dev/) para chat e imágenes
 - **UI Components**: [AI Elements](https://ai-sdk.dev/elements/overview) de Vercel
-- **Linting**: [Biome](https://biomejs.dev/)
 - **Almacenamiento y autenticación**: [supabase](https://supabase.com/)
 
 ## 📦 Instalación
